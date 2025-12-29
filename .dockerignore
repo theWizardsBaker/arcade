@@ -1,8 +1,6 @@
-# Configuration files with credentials
-config.json
-
-# Download queue
-download_queue.json
+# Git
+.git/
+.gitignore
 
 # Python
 __pycache__/
@@ -25,8 +23,6 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-
-# Virtual environments
 venv/
 ENV/
 env/
@@ -42,9 +38,20 @@ env/
 .DS_Store
 Thumbs.db
 
-# Temporary files
+# Project specific
+data/
+config.json
+download_queue.json
 *.tmp
 /tmp/
 
-# Docker persistent data
-data/
+# Documentation
+README.md
+quick_start.sh
+docker-run.sh
+docker-run.bat
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore

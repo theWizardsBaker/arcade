@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  arcade-downloader:
+    build: .
+    image: arcade-downloader:latest
+    container_name: batocera-arcade-downloader
+    volumes:
+      # Persist download queue and config
+      - ./data:/data
+      # Optional: Mount custom config
+      # - ./config.json:/app/config.json:ro
+    environment:
+      # Optional: Set default Batocera host
+      # - BATOCERA_HOST=192.168.1.100
+      # - BATOCERA_USER=root
+      # - BATOCERA_PASS=linux
+      - QUEUE_FILE=/data/download_queue.json
+    network_mode: host
+    stdin_open: true
+    tty: true
+    # Override command for different modes:
+    # For interactive mode: command: interactive.py
+    # For CLI mode: command: arcade_downloader.py search "game name" --host IP
+    command: arcade_downloader.py --help

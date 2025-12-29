@@ -20,11 +20,49 @@ A Python tool to remotely manage and download arcade ROMs to your Batocera cabin
 ## Installation
 
 ### Prerequisites
-- Python 3.7 or higher
+- **Option 1 (Docker):** Docker installed on your system
+- **Option 2 (Native Python):** Python 3.7 or higher
 - SSH access to your Batocera cabinet (enabled by default)
 - Network connectivity to your Batocera cabinet
 
-### Setup
+### Quick Start with Docker (Recommended)
+
+Docker provides the easiest way to run the tool with all dependencies included:
+
+**Linux/Mac:**
+```bash
+# Clone the repository
+git clone <repository-url>
+cd arcade
+
+# Run interactive mode
+./docker-run.sh interactive
+
+# Or use CLI mode
+./docker-run.sh search "street fighter" --host 192.168.1.100
+```
+
+**Windows:**
+```batch
+REM Clone the repository
+git clone <repository-url>
+cd arcade
+
+REM Run interactive mode
+docker-run.bat interactive
+
+REM Or use CLI mode
+docker-run.bat search "street fighter" --host 192.168.1.100
+```
+
+The Docker wrapper scripts will automatically:
+- Build the Docker image on first run
+- Handle volume mounts for persistent data
+- Set up networking for SSH connections
+
+### Native Python Setup
+
+If you prefer to run without Docker:
 
 1. Clone or download this repository:
 ```bash
@@ -114,6 +152,59 @@ python arcade_downloader.py queue process --host 192.168.1.100
 #### Clear completed downloads from queue
 ```bash
 python arcade_downloader.py queue clear
+```
+
+### Docker Commands
+
+If using Docker, simply replace `python arcade_downloader.py` with `./docker-run.sh` (Linux/Mac) or `docker-run.bat` (Windows):
+
+**Linux/Mac:**
+```bash
+# Interactive mode
+./docker-run.sh interactive
+
+# Search
+./docker-run.sh search "street fighter" --host 192.168.1.100
+
+# Download
+./docker-run.sh download \
+  --url "https://archive.org/download/item/game.zip" \
+  --system mame \
+  --host 192.168.1.100
+
+# Queue management
+./docker-run.sh queue add --url "URL" --system mame
+./docker-run.sh queue list
+./docker-run.sh queue process --host 192.168.1.100
+
+# List systems
+./docker-run.sh list-systems --host 192.168.1.100
+
+# Open shell in container for debugging
+./docker-run.sh shell
+```
+
+**Windows:**
+```batch
+REM Interactive mode
+docker-run.bat interactive
+
+REM Search
+docker-run.bat search "street fighter" --host 192.168.1.100
+
+REM Queue management
+docker-run.bat queue add --url "URL" --system mame
+docker-run.bat queue process --host 192.168.1.100
+```
+
+**Using docker-compose:**
+```bash
+# Interactive mode
+docker-compose run --rm arcade-downloader interactive.py
+
+# CLI commands
+docker-compose run --rm arcade-downloader \
+  arcade_downloader.py search "game name" --host 192.168.1.100
 ```
 
 ## Configuration
@@ -253,6 +344,41 @@ The default Batocera credentials (`root`/`linux`) should be changed if your cabi
 - Refresh the game list in EmulationStation (Start → Game Collection Settings → Update Game Lists)
 - Verify the ROM is in the correct system directory
 - Check that the ROM format is supported by the emulator
+
+### Docker-specific issues
+
+#### Image not found or build fails
+```bash
+# Rebuild the Docker image
+./docker-run.sh build
+
+# Or manually
+docker build -t arcade-downloader:latest .
+```
+
+#### Cannot connect from Docker container
+- Ensure you're using `--network host` (the wrapper scripts do this automatically)
+- On Windows/Mac, Docker networking may require the actual IP instead of localhost
+- Check that your firewall allows Docker network access
+
+#### Permission errors with data directory
+```bash
+# Linux/Mac: Fix permissions on data directory
+sudo chown -R $USER:$USER ./data
+
+# Or run with elevated permissions if needed
+sudo ./docker-run.sh interactive
+```
+
+#### Queue file not persisting
+- Ensure the `./data` directory exists and is mounted correctly
+- Check docker-compose.yml or wrapper script volume mounts
+- The queue file should be in `./data/download_queue.json`
+
+#### Docker commands not found (Windows)
+- Ensure Docker Desktop is running
+- Add Docker to your PATH environment variable
+- Run `docker --version` to verify installation
 
 ## Legal Notice
 
