@@ -1,0 +1,17 @@
+{
+  "batocera": {
+    "host": "192.168.1.100",
+    "username": "root",
+    "password": "linux",
+    "port": 22
+  },
+  "default_system": "mame",
+  "download_mode": "direct",
+  "archive_org": {
+    "preferred_collections": [
+      "MAME_0.139_ROMS_(arcade_only)",
+      "MAME_2003_Reference_Set_MAME_0.78_ROMs",
+      "FinalBurn_Neo_-_Arcade_Games"
+    ]
+  }
+}
